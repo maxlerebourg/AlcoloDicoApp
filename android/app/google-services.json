@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "769348707502",
+    "firebase_url": "https://alcodico-6773d.firebaseio.com",
+    "project_id": "alcodico-6773d",
+    "storage_bucket": "alcodico-6773d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769348707502:android:6d8e1f5fb8fbe1b4",
+        "android_client_info": {
+          "package_name": "com.alcolodico"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCa4yWDQbQ0FJV5WtjV66xxGw8nwAyaJ8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769348707502-82p1f10t5s8subaf6qjaqj89oojjvj98.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
