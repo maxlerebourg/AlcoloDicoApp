@@ -1,4 +1,4 @@
-import Svg, {Rect, Text, G, Line, Polygon} from 'react-native-svg';
+import Svg, {Rect, Text, G, Line, Polygon, TextPath} from 'react-native-svg';
 import React from "react";
 import color from "../../components/Config/Color";
 import {Alert} from "react-native";
@@ -7,11 +7,11 @@ export default class Chart extends React.Component {
     render() {
         let config = this.props.config;
         let maxPrinted = 20;
-        config.chart = [{
+        /*config.chart = [{
             "pseudo": "Sina",
             "firstname": "Sina",
             "id": 1,
-            "counter": 2,
+            "counter": 5,
             "dataPoints": [
                 {
                     "x": "2019-05-29",
@@ -25,12 +25,20 @@ export default class Chart extends React.Component {
                 },
                 {
                     "x": "2019-06-06",
-                    "y": 1
+                    "y": 3,
+                    "z": 18
                 },
                 {
                     "x": "2019-06-06",
-                    "y": 18
+                    "y": 4,
+                    "z": 24
                 }
+                ,
+                {
+                    "x": "2019-06-06",
+                    "y": 3,
+                    "z": 18
+                },
             ]
         },
             {
@@ -53,7 +61,7 @@ export default class Chart extends React.Component {
                     }
                 ]
             }
-        ];
+        ];*/
         let chart = [];
         let minDate = new Date().getTime(), maxDate = new Date().getTime();
         let minParty = 100, maxParty = 0;
@@ -136,7 +144,7 @@ export default class Chart extends React.Component {
                                 <Text x={x}
                                       y={y - dy * j}
                                       fill={colors}
-                                      fontSize={'28px'}
+                                      fontSize={'22px'}
                                       textAnchor={'start'}>{config.chart[i].firstname}</Text>
                             );
                         }
@@ -156,7 +164,7 @@ export default class Chart extends React.Component {
                     );
                 }
                 return (<Svg xmlns="http://www.w3.org/2000/svg"
-                             viewBox="-20 0 680 600"
+                             viewBox="-20 0 720 600"
                              height={config && config.height ? config.height + "pt" : "30pt"}
                              width={config && config.width ? config.width + "pt" : "30pt"}>
                     {chart}
@@ -168,9 +176,9 @@ export default class Chart extends React.Component {
                     let usr = config.chart.find((el) => {
                         return el.id === config.user.id
                     });
-                    x = 30;
-                    dx = usr.counter / 360;
-                    y = 30;
+                    x = 300;
+                    dx = 2 * Math.PI / usr.counter;
+                    y = 300;
                     //dy = 600 / (maxParty - minParty);
                     let usersById = [];
                     config.chart.map((user) => {
@@ -187,27 +195,59 @@ export default class Chart extends React.Component {
                             };
                     }
 
-                    let p = {x: x / 2, y: 0},
-                        o = {x: x / 2, y: y / 2};
+                    let p = {x: x, y: y / 2},
+                        o = {x: x / 2, y: y / 2},
+                        dp = 0;
                     for (let place of usr.dataPoints) {
                         if (!places[place.z].printed){
                             places[place.z].printed = true;
                             let colors = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
-                            let ps = {
-                                x: Math.pow(p.x - places[place.z].counter, 2),
-                                y: Math.pow(p.y - places[place.z].counter, 2)}
-                            chart.push(
-                               <Polygon
-                                    points={`${o.x},${o.y} ${p.x},${p.y} ${ps.x},${ps.y}`}
-                                    fill={colors}
-                                />);
-                            p = ps;
+                            let dps = dp + places[place.z].counter * dx;
+                            for (let i = dp;  i <= dps; i += dx){
+
+                                let ps = {
+                                    x: x / 2 * Math.cos(i) + x / 2,
+                                    y: y / 2 * Math.sin(i) + y / 2
+                                };
+                                chart.push(
+                                   <Polygon
+                                        points={`${o.x},${o.y} ${p.x},${p.y} ${ps.x},${ps.y}`}
+                                        fill={colors}
+                                    />);
+                                if(i === dp + dx){
+                                    chart.push(
+                                        <Line
+                                            id={`path_${i}`}
+                                            d={`path_${i}`}
+                                            x1={o.x}
+                                            y1={o.y}
+                                            x2={ps.x}
+                                            y2={ps.y}
+                                            fill={colors}
+                                        />);
+                                    chart.push(
+                                        <Text>
+                                            <TextPath href={`#path_${i}`} startOffset="30%">
+                                                {places[place.z].name}
+                                            </TextPath>
+                                        </Text>);
+                                }
+                                //Alert.alert('caca', JSON.stringify(p) + ' / ' + JSON.stringify(ps));
+                                //break;
+                                p = ps;
+                            }
+                            dp = dps;
                         }
                     }
+                    /*chart.push(
+                        <Polygon
+                            points={'30,30 30,0 60,30'}
+                            fill={'red'}
+                        />);*/
                     //Alert.alert('place', JSON.stringify(places[1]));
 
                     return (<Svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="-30 -30 30 30"
+                                 viewBox="0 0 300 300"
                                  height={config && config.height ? config.height + "pt" : "30pt"}
                                  width={config && config.width ? config.width + "pt" : "30pt"}>
                         {chart}
