@@ -112,7 +112,7 @@ export default class Home extends React.Component {
                                         style={styles.image}
                                         source={{uri: getImageFromApi(Math.floor(Math.random() * 5 + 1))}}/>
                                 </View>
-                                <Text style={styles.title}>Organiser une soirée</Text>
+                                <Text style={styles.title}>Soirées</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.section_container}>
@@ -125,7 +125,7 @@ export default class Home extends React.Component {
                                         style={styles.img_background}
                                         source={{uri: this.state.c_img}}/>
                                 </View>
-                                <Text style={styles.title}>Recettes de Cocktails</Text>
+                                <Text style={styles.title}>Cocktails</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

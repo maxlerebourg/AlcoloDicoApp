@@ -12,13 +12,13 @@ export default light = {
 */
 ///*
 export default dark = {
-    mainColor:'#a62424', //'#7a42f4',// '#20D19E', //
-    displayColor: '#333',
-    backColor: '#555',
+    mainColor:'#f53b57', //'#7a42f4',// '#20D19E', //
+    displayColor: '#1e272e',
+    backColor: '#485460',
     cardBoard: '#094009',
     starColor: '#FFD700',
-    fontColor: '#aaa',
-    fontTitleColor: '#ddd',
-    fontEditColor: '#777'
+    fontColor: '#808e9b',
+    fontTitleColor: '#d2dae2',
+    fontEditColor: '#808e9b'
 }
 //*/

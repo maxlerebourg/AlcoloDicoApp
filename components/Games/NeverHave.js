@@ -7,7 +7,8 @@ import {
     View,
     TouchableOpacity,
 } from "react-native";
-import list from './NeverHaveList/list'
+import list from './NeverHaveList/list';
+import color from "../Config/Color";
 
 
 export default class NeverHave extends React.Component {
@@ -48,7 +49,7 @@ const
         main_container: {
             height: '100%',
             width: '100%',
-            backgroundColor: '#444',
+            backgroundColor: color.displayColor,
         },
         container:{
             height: '100%',
@@ -59,6 +60,6 @@ const
         },
         text: {
             fontSize: 50,
-            color: '#eee'
+            color: color.fontTitleColor,
         }
     });

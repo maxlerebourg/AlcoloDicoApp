@@ -1,5 +1,6 @@
 import React from "react";
 import {StyleSheet, View, TouchableOpacity, Image, Text} from "react-native";
+import color from "../Config/Color";
 
 
 //import {getImageFromApi} from "../../API/GameAPI";
