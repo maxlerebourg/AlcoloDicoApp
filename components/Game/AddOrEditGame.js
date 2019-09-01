@@ -121,8 +121,10 @@ export default class AddOrEditGame extends React.Component {
                             <Picker.Item label="Rien" value="3"/>
                             <Picker.Item label="Balles" value="4"/>
                             <Picker.Item label="Dés" value="5"/>
-                            <Picker.Item label="Jeu Vidéo Multijoueur" value="6"/>
-                            <Picker.Item label="Jeu Vidéo en Lan" value="7"/>
+                            <Picker.Item label="Domino" value="6"/>
+                            <Picker.Item label="Jeu Vidéo Multijoueur" value="7"/>
+                            <Picker.Item label="Jeu Vidéo en Lan" value="8"/>
+                            <Picker.Item label="Application mobile" value="9"/>
                         </Picker>
                         <Picker selectedValue={this.state.multiplayer}
                                 style={styles.input}

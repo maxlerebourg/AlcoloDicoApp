@@ -3,18 +3,12 @@ import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native'
 import {getImageFromApi} from "../../API/GameAPI";
 import playable from '../Config/Playable';
 
-import Balle from '../../images/svg/Balle';
-import Caps from '../../images/svg/Caps';
-import Card from '../../images/svg/Card';
-import Users from '../../images/svg/Users';
-import Dice from '../../images/svg/Dice';
-import Hess from '../../images/svg/Hess';
+
 import Star from "../../images/svg/Star";
 import Play from "../../images/svg/Play";
-import Lan from "../../images/svg/Lan";
-import Multiplayer from "../../images/svg/Multiplayer";
 
 import color from "../Config/Color";
+import GameIcon from "./GameIcon";
 
 
 export default class GameItem extends React.Component {
@@ -50,13 +44,7 @@ export default class GameItem extends React.Component {
                                 <Text style={styles.text}>{game.preview}</Text>
                             </View>
                             <View style={{bottom: '5%', left: '5%', flexDirection: 'row', position: 'absolute'}}>
-                                {game.categoryId === 1 ? <Card/> : null}
-                                {game.categoryId === 2 ? <Caps/> : null}
-                                {game.categoryId === 3 ? <Hess/> : null}
-                                {game.categoryId === 4 ? <Balle/> : null}
-                                {game.categoryId === 5 ? <Dice/> : null}
-                                {game.categoryId === 6 ? <Multiplayer/> : null}
-                                {game.categoryId === 7 ? <Lan/> : null}
+                                <GameIcon category={game.categoryId} />
                             </View>
                             { game.comments && game.comments[0] ?
                                 <View style={styles.star}>
@@ -94,12 +82,10 @@ const styles = StyleSheet.create({
     },
     title_text: {
         color: color.fontTitleColor,
-        //fontWeight: 'bold',
+        fontWeight: 'bold',
         flex: 1,
         flexWrap: 'nowrap',
         fontSize: 18,
-        fontWeight: 'bold',
-        //fontFamily: '1_Thany',
     },
     image: {
         width: 120,
@@ -107,6 +93,10 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 15,
     },
     text: {
+        color: color.fontColor,
+    },
+    under_text: {
+        fontSize: 12,
         color: color.fontColor,
     },
     star: {

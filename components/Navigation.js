@@ -16,6 +16,9 @@ import CocktailList from './Cocktail/CocktailList'
 import CocktailDetail from './Cocktail/CocktailDetail'
 
 import GameList from './Game/GameList'
+import GameListHorizontal from "./Game/GameListHorizontal";
+import GameListCategory from "./Game/GameListCategory";
+import GameSearch from './Game/GameSearch'
 import GameDetail from './Game/GameDetail'
 import AddOrEdit from './Game/AddOrEditGame'
 
@@ -146,6 +149,15 @@ const HomeStackNavigator = createStackNavigator({
     }
 });
 const GameStackNavigator = createStackNavigator({
+    GameListHorizontal: {
+        screen: GameListHorizontal,
+        navigationOptions: {
+            title: 'Jeux d\'alcool'
+        }
+    },
+    GameListCategory: {
+        screen: GameListCategory,
+    },
     GameList: {
         screen: GameList,
         navigationOptions: {
@@ -154,6 +166,12 @@ const GameStackNavigator = createStackNavigator({
     },
     GameDetail: {
         screen: GameDetail
+    },
+    GameSearch: {
+        screen: GameSearch,
+        navigationOptions: {
+            title: 'Chercher un jeu'
+        }
     },
     AddOrEdit: {
         screen: AddOrEdit,

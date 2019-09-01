@@ -20,7 +20,8 @@ export default class Home extends React.Component {
                     c0-8.315-6.741-15.057-15.057-15.057H36.245l219.756-200.24l74.836,68.191c4.408,4.016,10.771,5.051,16.224,2.644
                     c5.454-2.41,8.973-7.812,8.973-13.774V73.847h74.002v122.276c0,4.237,1.784,8.276,4.916,11.13l40.803,37.18H433.965z"/>
 
-            </Svg> :
+            </Svg>
+            :
             <Svg xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 512.001 512.001"
                  height={config && config.height ? config.height + "pt" : "30pt"}

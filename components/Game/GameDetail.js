@@ -12,17 +12,12 @@ import Rules from './Rules'
 import Preview from './Preview'
 import {getImageFromApi} from "../../API/GameAPI";
 
-import Caps from '../../images/svg/Caps';
-import Card from '../../images/svg/Card';
+
 import Users from '../../images/svg/Users';
-import Dice from '../../images/svg/Dice';
-import Hess from '../../images/svg/Hess';
-import Balle from '../../images/svg/Balle';
 import color from "../Config/Color";
 import Star from "../../images/svg/Star";
 import Arrow from "../../images/svg/Arrow";
-import Lan from "../../images/svg/Lan";
-import Multiplayer from "../../images/svg/Multiplayer";
+import GameIcon from "./GameIcon";
 
 export default class GameDetail extends React.Component {
     constructor(props) {
@@ -88,26 +83,20 @@ export default class GameDetail extends React.Component {
                                     </View>
                                     <View style={styles.container}>
                                         <Text style={styles.text}>Catégorie</Text>
-                                        {game.categoryId === 1 ? <Card/> : null}
-                                        {game.categoryId === 2 ? <Caps/> : null}
-                                        {game.categoryId === 3 ? <Hess/> : null}
-                                        {game.categoryId === 4 ? <Balle/> : null}
-                                        {game.categoryId === 5 ? <Dice/> : null}
-                                        {game.categoryId === 6 ? <Multiplayer/> : null}
-                                        {game.categoryId === 7 ? <Lan/> : null}
+                                        <GameIcon category={game.categoryId} />
                                     </View>
                                     <View style={styles.container}>
                                         <Text style={styles.text}>Multijoueur</Text>
-                                        <View style={styles.star}>
-                                            {!game.multiplayer ? <Users/> :
+                                        {!game.multiplayer ? <Users/> :
+                                            <View style={styles.star}>
                                                 <Text style={{
                                                     fontSize:17,
                                                     fontWeight: 'bold',
                                                     color: color.fontColor,}}>
                                                     {game.multiplayer}
-                                                </Text>}
-
-                                        </View>
+                                                </Text>
+                                            </View>
+                                        }
                                     </View>
                                 </View>
                                 <TouchableOpacity

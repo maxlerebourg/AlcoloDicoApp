@@ -17,24 +17,43 @@ import dico from '../Config/Game'
 import {getListGameFromApi} from "../../API/GameAPI";
 import color from "../Config/Color";
 import Plus from "../../images/svg/Plus";
+import Search from "../../images/svg/Search";
 
 
 export default class GameList extends React.Component {
     offset = 0;
     constructor(props) {
         super(props);
-
+        let state = this.props.navigation.state;
+        let label = state.params ? state.params.label : '';
         this.appear = new Animated.Value(1);
         this.height = new Animated.Value(45);
 
-        this.state = {games: [] = dico, isLoading: false, mod: false, choosenLabel: '', visible: true};
+        this.state = {
+            games: [],
+            isLoading: false,
+            mod: false,
+            choosenLabel: label,
+            visible: true};
     }
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+            headerRight: (
+                <TouchableOpacity
+                    onPress={() => {navigation.navigate('GameSearch')}}
+                    style={{width: 60, alignItems: 'center'}}>
+                    <Search/>
+                </TouchableOpacity>
+            ),
+        };
+    };
+
     _loadGames(cat) {
-        if (cat === '' || cat === 'new' || cat > 5) {
-            this.setState({isLoading: true});
+        this.setState({isLoading: true});
+        //Alert.alert('games', cat);
+        if (cat === '' || cat === 'new' || cat > 6) {
             getListGameFromApi(cat).then((data) => {
-                //Alert.alert('games', JSON.stringify(data));
                 if (cat === '') AsyncStorage.setItem('game', JSON.stringify(data));
                 this.setState({
                     games: data,
@@ -55,7 +74,7 @@ export default class GameList extends React.Component {
                 for (let i = data.length - 1; i >= 0; i < i--) {
                     if (data[i].categoryId != cat) data.splice(i, 1)
                 }
-                this.setState({games: data})
+                this.setState({games: data, isLoading: false});
             })
         }
     }
@@ -79,6 +98,7 @@ export default class GameList extends React.Component {
     };
 
     _onScroll = (event) => {
+        if (!this.state.mod) return;
         const currentOffset = event.nativeEvent.contentOffset.y;
         const direction = (currentOffset > 45 && currentOffset > this.offset) ? 'down' : 'up';
         const visible = direction === 'up';
@@ -116,41 +136,45 @@ export default class GameList extends React.Component {
     }
 
     componentDidMount() {
-        this._loadGames('')
+        this._loadGames(this.state.choosenLabel);
     }
 
     render() {
         return (
             <View style={styles.main_container}>
-                <Animated.View style={[styles.filter, {opacity: this.appear, height: this.height}]}>
-                    <Picker
-                        style={styles.picker}
-                        selectedValue={this.state.choosenLabel}
-                        onValueChange={(itemValue) => {
-                            this.setState({choosenLabel: itemValue},
-                                () => {this._loadGames(itemValue);});
-                        }}>
-                        <Picker.Item label="Aucun filtre" value=""/>
-                        <Picker.Item label="Nouveautés" value="new"/>
-                        <Picker.Item label="Cartes" value="1"/>
-                        <Picker.Item label="Caps" value="2"/>
-                        <Picker.Item label="Rien" value="3"/>
-                        <Picker.Item label="Balles" value="4"/>
-                        <Picker.Item label="Dés" value="5"/>
-                        <Picker.Item label="Jeux Vidéo Multijoueurs" value="6"/>
-                        <Picker.Item label="Jeux Vidéo en Lan" value="7"/>
-                    </Picker>
-                    {((this.state.choosenLabel > 0 && this.state.choosenLabel < 6) ||this.state.choosenLabel === '' ?
-                        <TouchableOpacity
-                            style={styles.button}
-                            onPress={() => {this._aleatoire()}}>
-                            <Text style={styles.buttonText}>Jeu aléatoire</Text>
-                        </TouchableOpacity> : null)
-                    }
-                </Animated.View>
+                {!this.state.mod ? null :
+                    <Animated.View style={[styles.filter, {opacity: this.appear, height: this.height}]}>
+                        <Picker
+                            style={styles.picker}
+                            selectedValue={this.state.choosenLabel}
+                            onValueChange={(itemValue) => {
+                                this.setState({choosenLabel: itemValue},
+                                    () => {this._loadGames(itemValue);});
+                            }}>
+                            <Picker.Item label="Aucun filtre" value=""/>
+                            <Picker.Item label="Nouveautés" value="new"/>
+                            <Picker.Item label="Cartes" value="1"/>
+                            <Picker.Item label="Caps" value="2"/>
+                            <Picker.Item label="Rien" value="3"/>
+                            <Picker.Item label="Balles" value="4"/>
+                            <Picker.Item label="Dés" value="5"/>
+                            <Picker.Item label="Domino" value="6"/>
+                            <Picker.Item label="Jeux Vidéo Multijoueurs" value="7"/>
+                            <Picker.Item label="Jeux Vidéo en Lan" value="8"/>
+                            <Picker.Item label="Application mobile" value="9"/>
+                        </Picker>
+                        {((this.state.choosenLabel > 0 && this.state.choosenLabel < 7) || this.state.choosenLabel === '' ?
+                            <TouchableOpacity
+                                style={styles.button}
+                                onPress={() => {this._aleatoire()}}>
+                                <Text style={styles.buttonText}>Jeu aléatoire</Text>
+                            </TouchableOpacity> : null)
+                        }
+                    </Animated.View>
+                }
                 <FlatList
                     onScroll={this._onScroll}
-                    ListHeaderComponent={<View style={{height: 45, width: '100%'}}/>}
+                    ListHeaderComponent={!this.state.mod ? <View/> : <View style={{height: 45, width: '100%'}}/>}
 
                     data={this.state.games}
                     renderItem={({item}) =>

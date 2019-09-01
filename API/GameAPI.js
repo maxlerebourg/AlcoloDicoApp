@@ -12,6 +12,14 @@ export function getListGameFromApi (text) {
     const url = 'http://' + server + ':3000/list/game' + (text ? '/'+text : 's');
     return fetch(url).then(data => data.json());
 }
+export function getListCategoryFromApi () {
+    const url = 'http://' + server + ':3000/list/categories';
+    return fetch(url).then(data => data.json());
+}
+export function getSearchGameFromApi (text) {
+    const url = 'http://' + server + ':3000/search/game/' + text;
+    return fetch(url).then(data => data.json());
+}
 /*export function getRandomFromApi (text) {
     const url = 'http://' + server + ':3000/random' + (text ? '/'+text : '');
     return fetch(url).then(data => data.json());

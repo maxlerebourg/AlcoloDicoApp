@@ -93,7 +93,7 @@ export default class Home extends React.Component {
                     <View style={styles.section_container}>
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.navigation.navigate('GameList')
+                                this.props.navigation.navigate('GameListHorizontal')
                             }}>
                             <View style={styles.img_container}>
                                 {this.state.g_img}

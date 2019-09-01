@@ -76,8 +76,10 @@ export default class Commentary extends React.Component {
                     key={i}
                     style={styles.star}
                     onPress={() => {
+                        this.input.focus();
                         this.setState({rate: i+1});
-                }}>
+                    }}
+                >
                         {<Star  config={{height: 25, width: 25, empty: !(i < this.state.rate) }}/> }
                 </TouchableOpacity>);
         }
@@ -87,12 +89,14 @@ export default class Commentary extends React.Component {
                     {stars}
                 </View>
                 <KeyboardAvoidingView style={styles.comment}>
-                    <TextInput style={styles.input}
-                               value={this.state.comment}
-                               onChangeText={(text) => {
-                                   this.handleComment(text)
-                               }}
-                               placeholder='Laisse un commentaire...'
+                    <TextInput
+                        ref={(view) => this.input = view}
+                        style={styles.input}
+                        value={this.state.comment}
+                        onChangeText={(text) => {
+                            this.handleComment(text)
+                        }}
+                        placeholder='Laisse un commentaire...'
                     />
                     <TouchableOpacity
                         style={styles.icon}

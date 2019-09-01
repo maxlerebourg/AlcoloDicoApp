@@ -125,7 +125,7 @@ export default class QuoteList extends React.Component {
                 <TouchableOpacity
                     style={styles.plus}
                     onPress={() => this.props.navigation.navigate('QuoteAdd')}>
-                    <Plus config={{height: 20, width: 20}}/>
+                    <Plus config={{height: 20, width: 20, color: '#fff'}}/>
                 </TouchableOpacity>
                 {this.state.isLoading ?
                     <View style={[styles.loading_container, {backgroundColor: 'rgba(50,50,50, 0.8)'}]}>
