@@ -32,6 +32,7 @@ export default class PartyDetail extends React.Component {
     constructor(props) {
         super(props);
         let party = this.props.navigation.state.params.party;
+        //Alert.alert('caca', JSON.stringify(party));
         let user = this.props.navigation.state.params.user;
         let date = new Date();
         let dateParty = new Date(party.date);
@@ -103,6 +104,26 @@ export default class PartyDetail extends React.Component {
                     <ScrollView ref={(view) => {this.scroll = view}}>
                         <View style={styles.content_container}>
                             <View style={{height: 500}}/>
+                            <View style={[styles.section_container, (this.state.display ? null : {display: 'none'})]}>
+                                <View style={styles.section}>
+                                    <AddUser/>
+                                    <Text style={styles.title_section}>Ajouter des gens</Text>
+                                </View>
+                                <TextInput
+                                    style={styles.text_input}
+                                    onChangeText={(changedText) => {
+                                        changedText.length > 0 ? this._searchSuggestion(changedText) : null
+                                    }}
+                                    placeholder="Ajouter quelqu'un..."
+                                    clearButtonMode="always"
+                                    placeholderTextColor={color.fontColor}
+                                />
+                                <FlatList
+                                    data={this.state.suggest}
+                                    renderItem={(item) => {return this.renderUser(item, false)}}
+                                    keyExtractor={(item) => item.id.toString()}
+                                />
+                            </View>
                             <View style={[styles.section_container,
                                 (this.state.date > this.state.dateParty ? null : {display: 'none'})]}>
                                 <View style={styles.section}>
@@ -146,7 +167,7 @@ export default class PartyDetail extends React.Component {
                                             <View style={styles.info}>
                                                 <Text style={styles.text}>Lieu : chez </Text>
                                                 <Text style={styles.user_name}>
-                                                    {this.state.party.user.firstname} {this.state.party.user.lastname}
+                                                    {this.state.party.user.firstname ? this.state.party.user.firstname : 'moi'} {this.state.party.user.lastname}
                                                 </Text>
                                             </View> :
                                             <View style={styles.info}>
@@ -166,26 +187,6 @@ export default class PartyDetail extends React.Component {
                                     renderItem={(item) => {
                                         return this.renderUser(item, true);
                                     }}
-                                    keyExtractor={(item) => item.id.toString()}
-                                />
-                            </View>
-                            <View style={[styles.section_container, (this.state.display ? null : {display: 'none'})]}>
-                                <View style={styles.section}>
-                                    <AddUser/>
-                                    <Text style={styles.title_section}>Ajouter des gens</Text>
-                                </View>
-                                <TextInput
-                                    style={styles.text_input}
-                                    onChangeText={(changedText) => {
-                                        changedText.length > 0 ? this._searchSuggestion(changedText) : null
-                                    }}
-                                    placeholder="Ajouter quelqu'un..."
-                                    clearButtonMode="always"
-                                    placeholderTextColor={color.fontColor}
-                                />
-                                <FlatList
-                                    data={this.state.suggest}
-                                    renderItem={(item) => {return this.renderUser(item, false)}}
                                     keyExtractor={(item) => item.id.toString()}
                                 />
                             </View>

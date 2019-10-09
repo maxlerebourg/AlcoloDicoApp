@@ -16,11 +16,12 @@ import color from "../Config/Color";
 
 
 export default class ScoreBoard extends React.Component {
+    color = ['#f53b57', '#575fcf', '#0fbcf9', '#00d8d6', '#05c46b', '#ffa801', '#d2dae2'];
     tab = [{id: 0, color: color.mainColor, score: 0, name: 'Player 1'}];
 
     constructor(props) {
         super(props);
-        this.state = {tab: this.tab, modal: {visible: false, title: '', input: ''}};
+        this.state = {tab: this.tab, modal: {visible: false, title: ''}, input: ''};
     }
 
     _addPlayer() {
@@ -56,60 +57,117 @@ export default class ScoreBoard extends React.Component {
 
     _toggleModal(id, select) {
         this.setState({modal: {visible: !this.state.modal.visible, title: select, id: id}, input: ''});
-        setTimeout(() => this.input.focus(), 100);
+        if (select !== 'couleur') setTimeout(() => this.input.focus(), 100);
+    }
+    _save() {
+        if (this.state.input.length < 1) return;
+        switch (this.state.modal.title) {
+            case 'nom' :
+                this._setName(this.state.modal.id, this.state.input);
+                break;
+            case 'couleur' :
+                this._setColor(this.state.modal.id, this.state.input);
+                break;
+            case 'score' :
+                this._setScore(this.state.modal.id, this.state.input);
+                break;
+            default :
+                break;
+        }
+        this.setState({modal: {visible: false}});
     }
 
     render() {
         return (
             <View style={styles.main_container}>
-                    <View style={styles.buttons}>
-                        <Text style={styles.text}>Nombre de joueurs : </Text>
-                        <TouchableOpacity
-                            disabled={this.state.tab.length <= 1}
-                            style={styles.button}
-                            onPress={() => {this._remPlayer()}}>
-                            <Text style={{
-                                color: this.state.tab.length <= 1 ? 'gray' : 'white'
-                            }}>-</Text>
-                        </TouchableOpacity>
-                        <Text style={[styles.text_button, styles.text]}>{this.state.tab.length}</Text>
-                        <TouchableOpacity
-                            disabled={this.state.tab.length >= 10}
-                            style={styles.button}
-                            onPress={() => {this._addPlayer()}}>
-                            <Text style={{color: this.state.tab.length >= 10 ? 'gray' : 'white'}}>+</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <FlatList
-                        data={this.state.tab}
-                        renderItem={({item}) => (
-                            <View style={styles.cel}>
-                                <TouchableOpacity style={[styles.cell, {borderBottomWidth: (this.tab.length-1 !== item.id ? 1 : 0)}]}
-                                                  onPress={() => {this._toggleModal(item.id, 'nom')}}
-                                                  onLongPress={() => {this._toggleModal(item.id, 'couleur')}}>
-                                    <Text style={[{color: item.color}, styles.text_button]}>{item.name}</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.cell, {borderBottomWidth: (this.tab.length-1 !== item.id ? 1 : 0)}]}
-                                                  onPress={() => {
-                                                      this.tab[item.id].score++;
-                                                      this.setState({tab: this.tab.slice(0, this.tab.length)})}}
-                                                  onLongPress={() => {this._toggleModal(item.id, 'score')}}>
-                                    <Text style={[{color: item.color}, styles.text_button]}>{item.score}</Text>
-                                </TouchableOpacity>
-                            </View>)}
-                        keyExtractor={(item) => item.id.toString()}
-                    />
+                <View style={styles.buttons}>
+                    <Text style={styles.text}>Nombre de joueurs : </Text>
+                    <TouchableOpacity
+                        disabled={this.state.tab.length <= 1}
+                        style={styles.button}
+                        onPress={() => {
+                            this._remPlayer()
+                        }}>
+                        <Text style={{
+                            color: this.state.tab.length <= 1 ? 'gray' : 'white'
+                        }}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={[styles.text_button, styles.text]}>{this.state.tab.length}</Text>
+                    <TouchableOpacity
+                        disabled={this.state.tab.length >= 10}
+                        style={styles.button}
+                        onPress={() => {
+                            this._addPlayer()
+                        }}>
+                        <Text style={{color: this.state.tab.length >= 10 ? 'gray' : 'white'}}>+</Text>
+                    </TouchableOpacity>
+                </View>
+                <FlatList
+                    data={this.state.tab}
+                    renderItem={({item}) => (
+                        <View style={styles.cel}>
+                            <TouchableOpacity
+                                style={[styles.cell, {borderBottomWidth: (this.tab.length - 1 !== item.id ? 1 : 0)}]}
+                                onPress={() => {
+                                    this._toggleModal(item.id, 'nom')
+                                }}
+                                onLongPress={() => {
+                                    this._toggleModal(item.id, 'couleur')
+                                }}>
+                                <Text style={[styles.text_button, {color: item.color}]}>{item.name}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.cell, {borderBottomWidth: (this.tab.length - 1 !== item.id ? 1 : 0)}]}
+                                onPress={() => {
+                                    this.tab[item.id].score++;
+                                    this.setState({tab: this.tab.slice(0, this.tab.length)})
+                                }}
+                                onLongPress={() => {
+                                    this._toggleModal(item.id, 'score')
+                                }}>
+                                <Text style={[{color: item.color}, styles.text_button]}>{item.score}</Text>
+                            </TouchableOpacity>
+                        </View>)}
+                    keyExtractor={(item) => item.id.toString()}
+                />
                 <Modal visible={this.state.modal.visible}
                        transparent={true}>
                     <View style={styles.modal_container}>
                         <View style={styles.modal_content}>
                             <Text style={styles.text_button}>Changer {this.state.modal.title}</Text>
-                            <TextInput style={styles.input}
-                                       ref={(view) => this.input = view}
-                                       keyboardType={this.state.modal.title === 'score' ? 'numeric' : 'default'}
-                                       underlineColorAndroid="transparent"
-                                       placeholder={this.state.modal.title}
-                                       onChangeText={(text) => {this.setState({input: text});}}/>
+                            {
+                                this.state.modal.title === 'couleur' ?
+                                <FlatList data={this.color}
+                                          horizontal={true}
+                                          showsVerticalScrollIndicator={false}
+                                          showsHorizontalScrollIndicator={false}
+                                          renderItem={({item}) => (
+                                              <TouchableOpacity
+                                                  onPress={() => {
+                                                      this.setState({input: item}, this._save());
+                                                  }}
+                                                  style={{
+                                                      backgroundColor: item,
+                                                      height: 30,
+                                                      width: 30,
+                                                      marginTop: 15,
+                                                      marginLeft: 10,
+                                                      marginRight: 10,
+                                              }}/>)}
+                                          keyExtractor={(item) => item}/>
+                                :
+                                <TextInput style={styles.input}
+                                           ref={(view) => this.input = view}
+                                           keyboardType={this.state.modal.title === 'score' ? 'numeric' : 'default'}
+                                           underlineColorAndroid="transparent"
+                                           placeholder={this.state.modal.title}
+                                           placeholderTextColor={color.fontColor}
+                                           onChangeText={(text) => {
+                                               this.setState({input: text});
+                                           }}
+                                           onSubmitEditing={() => this._save}
+                                />
+                            }
                             <View style={styles.btn_container}>
                                 <TouchableOpacity style={styles.touch_modal}
                                                   onPress={() => {
@@ -118,22 +176,7 @@ export default class ScoreBoard extends React.Component {
                                     <Text style={styles.btn_modal_left}>ANNULER</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.touch_modal}
-                                                  onPress={() => {
-                                                      switch (this.state.modal.title) {
-                                                          case 'nom' :
-                                                              this._setName(this.state.modal.id, this.state.input);
-                                                              break;
-                                                          case 'couleur' :
-                                                              this._setColor(this.state.modal.id, this.state.input);
-                                                              break;
-                                                          case 'score' :
-                                                              this._setScore(this.state.modal.id, this.state.input);
-                                                              break;
-                                                          default :
-                                                              break;
-                                                      }
-                                                      this.setState({modal: {visible: false}});
-                                                  }}>
+                                                  onPress={() => this._save}>
                                     <Text style={styles.btn_modal_right}>OK</Text>
                                 </TouchableOpacity>
                             </View>
@@ -149,16 +192,17 @@ const styles = StyleSheet.create({
     modal_container: {
         width: '100%',
         height: '100%',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         alignItems: 'center',
-        backgroundColor: 'rgba(50,50,50,0.8)',
+        backgroundColor: 'rgba(50,50,50,0.4)',
     },
     modal_content: {
         height: 140,
         width: '90%',
         padding: 15,
-        backgroundColor: "#fff",
-        borderRadius: 3,
+        backgroundColor: color.backColor,
+        borderTopRightRadius: 10,
+        borderTopLeftRadius: 10,
     },
     btn_container: {
         flex: 1,
@@ -207,7 +251,7 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 color: '#009688',
                 padding: 8,
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 fontSize: 14,
             },
         }),
@@ -225,7 +269,7 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 color: '#009688',
                 padding: 8,
-                fontWeight:'bold',
+                fontWeight: 'bold',
                 fontSize: 14,
             },
         }),
@@ -238,7 +282,6 @@ const styles = StyleSheet.create({
         color: color.fontColor,
     },
     main_container: {
-        height: '100%',
         width: '100%'
     },
     buttons: {
@@ -261,6 +304,7 @@ const styles = StyleSheet.create({
     text_button: {
         fontWeight: 'bold',
         fontSize: 18,
+        color: color.fontTitleColor,
     },
     cel: {
         flexDirection: 'row',

@@ -34,7 +34,7 @@ export default class Rating extends React.Component {
                            onChangeText={(num) => this.setState({quantity: num})}/>
                 <Text style={styles.text}>cl = {this.state.rate * 8 * this.state.quantity / 100}g d'alcool pur.</Text>
                 </View>
-                <Text style={styles.avert}>Eviter de dépasser 30g par jour et 140g par semaine.</Text>
+                <Text style={styles.avert}>Evitez de dépasser 30g par jour et 140g par semaine.</Text>
             </View>
         );
     }
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
         height: 40,
     },
     avert: {
+        color: color.fontColor,
         margin: 10,
         marginTop: 5,
         marginBottom: 5,

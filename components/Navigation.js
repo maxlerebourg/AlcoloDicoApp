@@ -70,6 +70,18 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     //return <IconComponent name={iconName} type={'ionicon'} size={25} color={tintColor}/>;
 };
 const HomeStackNavigator = createStackNavigator({
+    Login: {
+        screen: Login,
+        navigationOptions: {
+            title: 'Utilisateur'
+        }
+    },
+    Register: {
+        screen: Register,
+        navigationOptions: {
+            title: 'Inscription'
+        }
+    },
     Home: {
         screen: Home,
         navigationOptions: {
@@ -112,18 +124,7 @@ const HomeStackNavigator = createStackNavigator({
     CocktailDetail: {
         screen: CocktailDetail
     },
-    Login: {
-        screen: Login,
-        navigationOptions: {
-            title: 'Utilisateur'
-        }
-    },
-    Register: {
-        screen: Register,
-        navigationOptions: {
-            title: 'Inscription'
-        }
-    },
+
     QuoteList: {
         screen: QuoteList,
         navigationOptions: {

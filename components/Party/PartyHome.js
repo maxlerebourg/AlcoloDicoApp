@@ -38,8 +38,14 @@ export default class PartyHome extends React.Component {
         AsyncStorage.getItem('user', '').then((user) => {
             if (JSON.parse(user).pseudo && this.state.date !== '') {
                 createPartyInApi({date: this.state.date}).then((data) => {
+                    data[0].user = user;
+                    data[0].user.firstname = 'moi';
                     Alert.alert('Soirée crée', 'Votre soirée du '+data[0].date.substring(0,10)+' à été ajoutée.');
-                    this._myParty(this.state.date.toISOString().substring(0,10), true);
+                    this.props.navigation.navigate('PartyDetail', {
+                        party: data[0],
+                        title: ('Ma soirée du ' + data[0].date.substring(0, 10)),
+                        user: user,
+                    });
                 });
             }
         }).catch(() => {
@@ -57,7 +63,7 @@ export default class PartyHome extends React.Component {
                         }}, {
                             text: 'Supprimer', onPress: () => {
                                 cancelPartyInApi(item.party.id).then(() => {
-                                    Alert.alert('date', item.party.date.substring(0,10));
+                                    //Alert.alert('date', item.party.date.substring(0,10));
                                     this._myParty(item.party.date.substring(0,10), true);
                                 });
                         }}], {cancelable: false});

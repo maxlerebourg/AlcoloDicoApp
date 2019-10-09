@@ -74,7 +74,7 @@ export default class Home extends React.Component {
         }
         AsyncStorage.getItem('game').then((game) => {
             game = JSON.parse(game);
-            this._load_img(game, 'game');
+            this._load_img(game.find((el) => {return el.id === 1}).games, 'game');
         }).catch(() => {
             this._load_img(dico_game, 'game');
         });

@@ -75,11 +75,6 @@ export default class Register extends React.Component {
     render() {
         return (
             <KeyboardAvoidingView style={styles.container}>
-                <View style={styles.main_container}>
-                    <Image source={require('../../images/wall.jpg')}
-                           style={{marginTop: '60%'}}/>
-
-                </View>
                 <ScrollView>
                     <TextInput style={styles.input}
                                onChangeText={this.handlePseudo}
@@ -130,7 +125,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     container: {
-        padding: 20
+        height: '100%',
+        width: '100%',
+        padding: 20,
+        backgroundColor: color.displayColor,
     },
     input: {
         backgroundColor: 'white',
