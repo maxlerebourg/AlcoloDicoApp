@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         padding: 8,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 3
+        borderRadius: 3,
     },
     submitButtonExt: {
         height: 70,
@@ -80,12 +80,12 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 50
+        borderRadius: 50,
     },
     text: {
-        color: 'white',
+        color: color.fontColor,
         textAlign: 'center',
         fontSize: 20,
-        margin: 5
+        margin: 5,
     },
 });

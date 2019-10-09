@@ -17,6 +17,11 @@ export default class Tools extends React.Component {
         return (
             <View style={styles.main_container}>
                 <ScrollView>
+                    <View style={{height: 10}}/>
+                    <View style={styles.tool}><Text style={styles.text}>Tableau des scores</Text>
+                        <ScoreBoard/>
+                    </View>
+
                     <View style={styles.tool}><Text style={styles.text}>Chronomètre</Text>
                         <Chrono/>
                     </View>
@@ -28,10 +33,7 @@ export default class Tools extends React.Component {
                     <View style={styles.tool}><Text style={styles.text}>Volume d'alcool</Text>
                         <Rating/>
                     </View>
-
-                    <View style={styles.tool}><Text style={styles.text}>Tableau des scores</Text>
-                        <ScoreBoard/>
-                    </View>
+                    <View style={{height: 10}}/>
                 </ScrollView>
             </View>
         );

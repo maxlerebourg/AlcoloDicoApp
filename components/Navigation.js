@@ -246,6 +246,19 @@ const GameStackNavigator = createStackNavigator({
         headerStyle: styles.header_tab,
     }
 });
+const ToolsStackNavigator = createStackNavigator({
+    Tools: {
+        screen: Tools,
+        navigationOptions: {
+            title: 'Outils'
+        }
+    }
+}, {
+    defaultNavigationOptions: {
+        headerTintColor: color.fontTitleColor,
+        headerStyle: styles.header_tab,
+    }
+});
 
 const App = createBottomTabNavigator(
     {
@@ -262,7 +275,7 @@ const App = createBottomTabNavigator(
             }
         },
         Tools: {
-            screen: Tools,
+            screen: ToolsStackNavigator,
             navigationOptions: {
                 title: 'Outils'
             }
