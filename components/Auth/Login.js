@@ -42,7 +42,7 @@ export default class Login extends React.Component {
                     Alert.alert('Connexion Réussie', 'Vous êtes connecté sous le pseudo : ' + data.pseudo);
                     AsyncStorage.setItem('user', JSON.stringify(data));
                     this._print();
-                    this.props.navigation.navigate('Home');
+                    this.props.navigation.navigate('GameListHorizontal');
                 } else Alert.alert('Status', data.status);
             });
         });

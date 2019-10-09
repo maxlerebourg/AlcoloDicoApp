@@ -49,7 +49,7 @@ export default class Register extends React.Component {
             RegisterInApi(json).then((data) => {
                 if (data.pseudo) {
                     Alert.alert('Connexion Réussie', 'Vous êtes connecté sous le pseudo : ' + data.pseudo);
-                    AsyncStorage.setItem('user', JSON.stringify(data));this.props.navigation.navigate('Home');
+                    AsyncStorage.setItem('user', JSON.stringify(data));this.props.navigation.navigate('GameListHorizontal');
                 } else Alert.alert('Status', data.status);
             });
 

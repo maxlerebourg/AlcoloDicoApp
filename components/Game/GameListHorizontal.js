@@ -23,8 +23,10 @@ import Send from "../../images/svg/Send";
 
 
 export default class GameListHorizontal extends React.Component {
+    offset = 0;
     constructor(props) {
         super(props);
+        this.appear = new Animated.Value(1);
         this.state = {games: [] = dico, isLoading: false, flat_lists: []};
     }
 
@@ -120,18 +122,32 @@ export default class GameListHorizontal extends React.Component {
         this._loadGames('')
     }
 
+    _onScroll = (event) => {
+        const currentOffset = event.nativeEvent.contentOffset.y;
+        const direction = (currentOffset > 45 && currentOffset > this.offset) ? 'down' : 'up';
+        const visible = direction === 'up';
+        if (visible !== this.state.visible) {
+            this.setState({ visible: visible });
+            this.appear.setValue(visible ? 0 : 1);
+            Animated.timing(
+                this.appear, {duration: 150, toValue: (visible ? 1 : 0), easing: Easing.linear,}).start();
+        }
+        this.offset = currentOffset
+    };
+
     render() {
         return (
             <View style={styles.main_container}>
-                <ScrollView>
+                <ScrollView onScroll={this._onScroll}>
                     {this.state.flat_lists}
 
                 </ScrollView>
-                <TouchableOpacity
-                    style={styles.plus}
-                    onPress={() => this.props.navigation.navigate('AddOrEdit')}>
-                    <Plus config={{height: 20, width: 20}}/>
-                </TouchableOpacity>
+                <Animated.View style={[styles.plus, {opacity: this.appear}]}>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('AddOrEdit')}>
+                        <Plus config={{height: 20, width: 20}}/>
+                    </TouchableOpacity>
+                </Animated.View>
                 {this.state.isLoading ?
                     <View style={[styles.loading_container, {backgroundColor: 'rgba(100,100,100, 0.8)'}]}>
                         <View style={styles.loading}>

@@ -13,7 +13,7 @@ import {
     Easing,
 } from 'react-native';
 import Item from './GameItemHorizontal'
-import dico from '../Config/Game'
+//import dico from '../Config/Game'
 import {getListGameFromApi} from "../../API/GameAPI";
 import color from "../Config/Color";
 import Plus from "../../images/svg/Plus";
@@ -24,17 +24,16 @@ export default class GameList extends React.Component {
     offset = 0;
     constructor(props) {
         super(props);
+        this.appear = new Animated.Value(1);
         let state = this.props.navigation.state;
         let label = state.params ? state.params.label : '';
         let games = state.params ? state.params.games.sort((a, b) => {return a.name > b.name ? 1 : -1}) : [];
-        this.appear = new Animated.Value(1);
-        this.height = new Animated.Value(45);
 
         this.state = {
             games: games,
             isLoading: false,
             mod: false,
-            choosenLabel: label,
+            chosenLabel: label,
             visible: true};
     }
 
@@ -51,58 +50,31 @@ export default class GameList extends React.Component {
         };
     };
 
-    _loadGames(cat) {
-        if (cat !== 'new') return;
-        this.setState({isLoading: true});
-        getListGameFromApi(cat).then((data) => {
-            //if (cat === '') AsyncStorage.setItem('game', JSON.stringify(data));
-            this.setState({
-                games: data,
-                isLoading: false
-            })
-        }).catch(() => {
-            AsyncStorage.getItem('game', '').then(dataset => {
-                let data = JSON.parse(dataset).slice(0, dataset.length);
-                this.setState({
-                    games: data,
-                    isLoading: false
-                })
-            })
-        });
-    }
-
-    _aleatoire = () => {
-        AsyncStorage.getItem('game').then((dataset) => {
-            let data = JSON.parse(dataset);
-            if (this.state.choosenLabel !== '') {
-                for (let i = data.length - 1; i >= 0; i < i--) {
-                    if (data[i].categoryId != this.state.choosenLabel) data.splice(i, 1)
-                }
-            }
-            let game = data[Math.floor(Math.random() * data.length)];
-            this.props.navigation.navigate('GameDetail', {
-                title: game.name,
-                game: game,
-                rand: this._aleatoire,
-                play: this._letsPlay
-            });
-        })
-    };
-
     _displayDetail = (game) => {
         this.props.navigation.navigate('GameDetail', {title: game.name, game: game, play: this._letsPlay});
     };
     _letsPlay = (jeu) => {
         this.props.navigation.navigate(jeu);
     };
-    componentDidMount() {
-        this._loadGames(this.state.choosenLabel);
-    }
+    _onScroll = (event) => {
+        const currentOffset = event.nativeEvent.contentOffset.y;
+        const direction = (currentOffset > 45 && currentOffset > this.offset) ? 'down' : 'up';
+        const visible = direction === 'up';
+        if (visible !== this.state.visible) {
+            this.setState({ visible: visible });
+            this.appear.setValue(visible ? 0 : 1);
+            Animated.timing(
+                this.appear, {duration: 150, toValue: (visible ? 1 : 0), easing: Easing.linear,}).start();
+        }
+        this.offset = currentOffset
+    };
+
 
     render() {
         return (
             <View style={styles.main_container}>
                 <FlatList
+                    onScroll={this._onScroll}
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
                     ListHeaderComponent={<View style={{height: 15}}/>}
@@ -112,11 +84,12 @@ export default class GameList extends React.Component {
                     }
                     keyExtractor={(item) => item.id.toString()}
                 />
-                <TouchableOpacity
-                    style={styles.plus}
-                    onPress={() => this.props.navigation.navigate('AddOrEdit')}>
-                    <Plus config={{height: 20, width: 20}}/>
-                </TouchableOpacity>
+                <Animated.View style={[styles.plus, {opacity: this.appear}]}>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('AddOrEdit')}>
+                        <Plus config={{height: 20, width: 20}}/>
+                    </TouchableOpacity>
+                </Animated.View>
                 {this.state.isLoading ?
                     <View style={[styles.loading_container, {backgroundColor: 'rgba(100,100,100, 0.8)'}]}>
                         <View style={styles.loading}>

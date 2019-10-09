@@ -9,6 +9,7 @@ import Domino from "../../images/svg/Domino";
 import Multi_player from "../../images/svg/Multiplayer";
 import Lan from "../../images/svg/Lan";
 import App from "../../images/svg/App";
+import Puzzle from "../../images/svg/Puzzle";
 
 import {View} from "react-native";
 
@@ -25,6 +26,7 @@ export default class GameIcon extends React.Component {
             {category === 7 ? <Multi_player/> : null}
             {category === 8 ? <Lan/> : null}
             {category === 9 ? <App/> : null}
+            {category === 10 ? <Puzzle/> : null}
         </View>
     }
 }
