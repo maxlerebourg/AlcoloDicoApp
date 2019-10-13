@@ -16,7 +16,7 @@ import color from "../Config/Color";
 
 
 export default class ScoreBoard extends React.Component {
-    color = ['#f53b57', '#575fcf', '#0fbcf9', '#00d8d6', '#05c46b', '#ffa801', '#d2dae2'];
+    color = ['#f53b57', '#575fcf', '#0fbcf9', '#00d8d6', '#05c46b', '#ffa801', '#f1c40f', '#d2dae2'];
     tab = [{id: 0, color: color.mainColor, score: 0, name: 'Player 1'}];
 
     constructor(props) {
@@ -57,9 +57,9 @@ export default class ScoreBoard extends React.Component {
 
     _toggleModal(id, select) {
         this.setState({modal: {visible: !this.state.modal.visible, title: select, id: id}, input: ''});
-        if (select !== 'couleur') setTimeout(() => this.input.focus(), 100);
+        if (select !== 'couleur') setTimeout(() => this.input.focus(), 150);
     }
-    _save() {
+    _save = () => {
         if (this.state.input.length < 1) return;
         switch (this.state.modal.title) {
             case 'nom' :
@@ -75,7 +75,7 @@ export default class ScoreBoard extends React.Component {
                 break;
         }
         this.setState({modal: {visible: false}});
-    }
+    };
 
     render() {
         return (
@@ -130,8 +130,9 @@ export default class ScoreBoard extends React.Component {
                         </View>)}
                     keyExtractor={(item) => item.id.toString()}
                 />
-                <Modal visible={this.state.modal.visible}
-                       transparent={true}>
+                <Modal
+                    visible={this.state.modal.visible}
+                    transparent={true}>
                     <View style={styles.modal_container}>
                         <View style={styles.modal_content}>
                             <Text style={styles.text_button}>Changer {this.state.modal.title}</Text>
@@ -144,13 +145,13 @@ export default class ScoreBoard extends React.Component {
                                           renderItem={({item}) => (
                                               <TouchableOpacity
                                                   onPress={() => {
-                                                      this.setState({input: item}, this._save());
+                                                      this.setState({input: item}, this._save);
                                                   }}
                                                   style={{
                                                       backgroundColor: item,
-                                                      height: 30,
-                                                      width: 30,
-                                                      marginTop: 15,
+                                                      height: 35,
+                                                      width: 35,
+                                                      marginTop: 10,
                                                       marginLeft: 10,
                                                       marginRight: 10,
                                               }}/>)}
@@ -165,7 +166,7 @@ export default class ScoreBoard extends React.Component {
                                            onChangeText={(text) => {
                                                this.setState({input: text});
                                            }}
-                                           onSubmitEditing={() => this._save}
+                                           onSubmitEditing={this._save}
                                 />
                             }
                             <View style={styles.btn_container}>
@@ -176,7 +177,7 @@ export default class ScoreBoard extends React.Component {
                                     <Text style={styles.btn_modal_left}>ANNULER</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.touch_modal}
-                                                  onPress={() => this._save}>
+                                                  onPress={this._save}>
                                     <Text style={styles.btn_modal_right}>OK</Text>
                                 </TouchableOpacity>
                             </View>
@@ -194,11 +195,11 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        backgroundColor: 'rgba(50,50,50,0.4)',
+        backgroundColor: 'rgba(50,50,50,0.8)',
     },
     modal_content: {
         height: 140,
-        width: '90%',
+        width: '100%',
         padding: 15,
         backgroundColor: color.backColor,
         borderTopRightRadius: 10,

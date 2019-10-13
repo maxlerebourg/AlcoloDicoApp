@@ -83,7 +83,6 @@ export default class PMU extends React.Component {
                     img.push([]);
             }
         }
-        Alert.alert('img',''+img[img.length-1].url);
         this.setState({img: img});
     }
     _pioche() {

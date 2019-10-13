@@ -197,9 +197,6 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     section_container: {
-        /*borderColor: '#ccc',
-        borderTopWidth: 1,
-        borderLeftWidth: 1,*/
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
         borderBottomLeftRadius: 3,
@@ -208,7 +205,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         paddingLeft: 10,
         margin: 1,
-        backgroundColor: color.displayColor,
+        backgroundColor: 'rgba(12,15,18,.85)',
     },
     section: {
         flexDirection: 'row',

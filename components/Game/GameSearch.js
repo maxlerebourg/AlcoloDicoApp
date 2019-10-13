@@ -28,24 +28,12 @@ export default class GameSearch extends React.Component {
     _loadGames(text) {
         if (!this.ok) return;
         this.ok = false;
-        //this.setState({isLoading: true});
         getSearchGameFromApi(text).then((data) => {
-            //Alert.alert('games', JSON.stringify(data));
             this.setState({
                 games: data,
-                //isLoading: false
             })
         }).catch(() => {
-            AsyncStorage.getItem('game', '').then(dataset => {
-                let data = JSON.parse(dataset).slice(0, dataset.length);
-                let datas = data.map((a) => {
-                    return a.name.contains(text)
-                });
-                this.setState({
-                    games: datas,
-                    //isLoading: false
-                })
-            })
+            Alert.alert('Erreur', 'Erreur de connexion internet ou du serveur');
         });
         this.ok = true;
     }

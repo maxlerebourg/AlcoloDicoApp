@@ -3,17 +3,15 @@ import {
     FlatList,
     View,
     StyleSheet,
-    Picker,
-    Text,
     Image,
-    Alert,
     TouchableOpacity,
-    AsyncStorage,
     Animated,
     Easing,
+    Text
 } from 'react-native';
 import Item from './GameItemHorizontal'
 //import dico from '../Config/Game'
+
 import {getListGameFromApi} from "../../API/GameAPI";
 import color from "../Config/Color";
 import Plus from "../../images/svg/Plus";
@@ -25,16 +23,16 @@ export default class GameList extends React.Component {
     constructor(props) {
         super(props);
         this.appear = new Animated.Value(1);
-        let state = this.props.navigation.state;
-        let label = state.params ? state.params.label : '';
-        let games = state.params ? state.params.games.sort((a, b) => {return a.name > b.name ? 1 : -1}) : [];
-
+        let {label, games, config} = this.props.navigation.state.params;
+        this.anim = games.map((a) => {return new Animated.Value(0);});
         this.state = {
-            games: games,
+            games: games.sort((a, b) => {return a.name > b.name ? 1 : -1}),
+            config: config,
             isLoading: false,
             mod: false,
             chosenLabel: label,
-            visible: true};
+            visible: true
+        };
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -68,7 +66,16 @@ export default class GameList extends React.Component {
         }
         this.offset = currentOffset
     };
-
+    componentDidMount() {
+        let i = 0;
+        this.anim.map((a) => {
+            Animated.timing(a, {
+                toValue: 1,
+                duration: 100,
+                delay: i++ * 50
+            }).start();
+        })
+    }
 
     render() {
         return (
@@ -79,8 +86,14 @@ export default class GameList extends React.Component {
                     showsVerticalScrollIndicator={false}
                     ListHeaderComponent={<View style={{height: 15}}/>}
                     data={this.state.games}
-                    renderItem={({item}) =>
-                        <Item game={item} category={true} displayDetail={this._displayDetail} play={this._letsPlay}/>
+                    renderItem={({item, index}) =>
+                        <Animated.View style={{opacity: this.anim[index]}}>
+                            <Item
+                                config={this.state.config}
+                                game={item}
+                                displayDetail={this._displayDetail}
+                                play={this._letsPlay}/>
+                        </Animated.View>
                     }
                     keyExtractor={(item) => item.id.toString()}
                 />

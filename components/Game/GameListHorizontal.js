@@ -4,16 +4,16 @@ import {
     View,
     ScrollView,
     StyleSheet,
-    Picker,
     Text,
     Image,
     Alert,
     TouchableOpacity,
-    AsyncStorage,
     Animated,
     Easing,
+    Dimensions,
 } from 'react-native';
 import Item from './GameItemHorizontal'
+
 import dico from '../Config/Game'
 import {getListCategoryFromApi} from "../../API/GameAPI";
 import color from "../Config/Color";
@@ -24,10 +24,16 @@ import Send from "../../images/svg/Send";
 
 export default class GameListHorizontal extends React.Component {
     offset = 0;
+
     constructor(props) {
         super(props);
+        let config = {
+            width: (Dimensions.get('window').width - 60) / 3,
+            height: (Dimensions.get('window').width - 60) / 3 + 60,
+        };
         this.appear = new Animated.Value(1);
-        this.state = {games: [] = dico, isLoading: false, flat_lists: []};
+        this.anim = [];
+        this.state = {games: [] = dico, isLoading: false, config: config, flat_lists: []};
     }
 
     static navigationOptions = ({navigation}) => {
@@ -47,15 +53,15 @@ export default class GameListHorizontal extends React.Component {
     _loadGames() {
         this.setState({isLoading: true});
         getListCategoryFromApi().then((data) => {
-            //Alert.alert('games', JSON.stringify(data));
-            AsyncStorage.setItem('game', JSON.stringify(data));
-
-            let flatlists = [<View style={{height: 15}}/>];
+            let flatlists = [<View style={{height: 15}} key={'top'}/>];
             for (let category of data) {
-                //Alert.alert("alert", JSON.stringify()category);
-                if (category.games.length > 0)
+                if (category.games.length > 0) {
+                    this.anim.push(new Animated.Value(0));
                     flatlists.push(
-                        <View keyExtractor={category.id}>
+                        <Animated.View
+                            key={category.name}
+                            style={{opacity: this.anim[this.anim.length - 1]}}
+                        >
                             <TouchableOpacity
                                 style={styles.title_container}
                                 onPress={() => {
@@ -63,6 +69,7 @@ export default class GameListHorizontal extends React.Component {
                                         label: category.id,
                                         games: category.games,
                                         title: category.name,
+                                        config: this.state.config,
                                     });
                                 }}>
                                 <Text style={styles.text}>{category.name}</Text>
@@ -79,6 +86,7 @@ export default class GameListHorizontal extends React.Component {
                                                 label: category.id,
                                                 games: category.games,
                                                 title: category.name,
+                                                config: this.state.config,
                                             });
                                         }}>
                                         <Text style={styles.text}>En découvrir plus</Text>
@@ -87,27 +95,35 @@ export default class GameListHorizontal extends React.Component {
                                 }
                                 showsHorizontalScrollIndicator={false}
                                 horizontal={true}
-                                snapToInterval={135}
+                                snapToInterval={this.state.config.width + 10}
                                 data={category.games.slice(0, 8)}
                                 renderItem={({item}) =>
-                                    <Item game={item} displayDetail={this._displayDetail} play={this._letsPlay}/>
+                                    <Item
+                                        config={this.state.config}
+                                        game={item}
+                                        displayDetail={this._displayDetail}
+                                        play={this._letsPlay}/>
                                 }
-                                keyExtractor={(item) => item.id.toString()}
+                                keyExtractor={(item) => item.name}
                             />
-                        </View>);
+                        </Animated.View>);
+                }
             }
             this.setState({
-                flat_lists: [<View>{flatlists}</View>],
+                flat_lists: [<View key={'flatlist'}>{flatlists}</View>],
                 isLoading: false
-            })
-        }).catch(() => {
-            AsyncStorage.getItem('game', '').then(dataset => {
-                let data = JSON.parse(dataset).slice(0, dataset.length);
-                this.setState({
-                    games: data,
-                    isLoading: false
+            }, () => {
+                let i = 0;
+                this.anim.map((a) => {
+                    Animated.timing(a, {
+                        toValue: 1,
+                        duration: 150,
+                        delay: i++ * 50
+                    }).start();
                 })
-            })
+            });
+        }).catch(() => {
+            Alert.alert('Erreur', 'Erreur de connexion internet ou du serveur');
         })
     }
 
@@ -119,7 +135,7 @@ export default class GameListHorizontal extends React.Component {
     };
 
     componentDidMount() {
-        this._loadGames('')
+        this._loadGames('');
     }
 
     _onScroll = (event) => {
@@ -127,7 +143,7 @@ export default class GameListHorizontal extends React.Component {
         const direction = (currentOffset > 45 && currentOffset > this.offset) ? 'down' : 'up';
         const visible = direction === 'up';
         if (visible !== this.state.visible) {
-            this.setState({ visible: visible });
+            this.setState({visible: visible});
             this.appear.setValue(visible ? 0 : 1);
             Animated.timing(
                 this.appear, {duration: 150, toValue: (visible ? 1 : 0), easing: Easing.linear,}).start();
